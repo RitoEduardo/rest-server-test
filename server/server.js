@@ -9,10 +9,9 @@ app.use(require('../routes/user'));
 const port = process.env.PORT;
 
 var db = mongoose.connection;
-mongoose.connect('mongodb://localhost:27017/coffee', {
+mongoose.connect(process.env.MONGO_DB, {
     useCreateIndex: true,
     useNewUrlParser: true,
-    //useFindAndModify: false
 });
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
