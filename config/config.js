@@ -18,3 +18,15 @@ if (process.env.NODE_ENV === 'dev') {
     urlDB = 'mongodb+srv://admin_edo:mongous_1547878@cluster0-xjare.mongodb.net/coffee?retryWrites=true&w=majority'
 }
 process.env.MONGO_DB = urlDB;
+
+// =========================================
+//           VENCIMIENTO DE TOKEN
+// =========================================
+
+process.env.EXPIRATION_TOKEN = 60 * 60 * 24 * 1;
+
+// =========================================
+//           SEED TOKEN AUTH
+// =========================================
+
+process.env.SEED_TOKEN = 'secret';

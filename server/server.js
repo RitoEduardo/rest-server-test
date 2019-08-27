@@ -4,7 +4,14 @@ const mongoose = require('mongoose');
 const express = require('express');
 const app = express();
 
-app.use(require('../routes/user'));
+const bodyParser = require('body-parser');
+
+//Parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+//Configuración global de rutas
+app.use(require('../routes'));
 
 const port = process.env.PORT;
 

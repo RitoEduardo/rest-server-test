@@ -46,6 +46,9 @@ userSchema.methods.toJSON = function() {
     return userObject;
 }
 
+userSchema.admin_rol = 'ADMIN_ROLE';
+
+
 userSchema.indexes();
 userSchema.plugin(uniqueValidator, {
     //message: '{PATH} necesary '

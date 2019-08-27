@@ -9,11 +9,6 @@ const bcrypt = require('bcrypt');
 //const myPlaintextPassword = 's0/\/\P4$$w0rD';
 //const someOtherPlaintextPassword = 'not_bacon';
 
-const bodyParser = require('body-parser');
-
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-
 app.get('/', function(req, res) {
     res.json({ init: 'Hello Word in API' });
 });
