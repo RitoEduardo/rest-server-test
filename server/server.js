@@ -2,7 +2,9 @@ require('../config/config');
 
 const mongoose = require('mongoose');
 const express = require('express');
-const app = express();
+const app = express('path');
+
+const path = require('path')
 
 const bodyParser = require('body-parser');
 
@@ -12,6 +14,16 @@ app.use(bodyParser.json());
 
 //Configuración global de rutas
 app.use(require('../routes'));
+
+
+console.log(express.static(__dirname + '../public/index.html '));
+console.log(path.resolve(__dirname, '../public'));
+
+//habilirar la carpeta public
+app.use(express.static(path.resolve(__dirname, '../public')));
+
+
+
 
 const port = process.env.PORT;
 
