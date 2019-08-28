@@ -16,28 +16,14 @@ app.put('/upload/user-profile', verifyToken, async(req, res) => {
 
 });
 
-app.put('/upload/product-img/:id', [verifyToken, verifyAdmin], (req, res) => {
+app.put('/upload/product-img/:id', [verifyToken, verifyAdmin], async(req, res) => {
 
     let id = req.params.id;
 
-    Product.findById(id)
-        .populate('user', 'name email')
-        .populate('category', 'description')
-        .exec((err, productDB) => {
+    let product = await Product.findById(id).exec();
+    return fnUpdateFile(req.files, product, res);
 
-            if (err) {
-                return res.status(400).json({
-                    error: (err && err.errors) ? err.error : err,
-                    successful: false,
-                })
-            }
 
-            res.json({
-                successful: true,
-                model: productDB
-            });
-
-        });
 
 });
 
@@ -54,16 +40,11 @@ fnUpdateFile = (files, model, res) => {
 
     let _path = './uploads/filename.jpg'
 
-    console.log(model instanceof User);
-
     if (model instanceof User) {
         _path = './uploads/users/profile_' + model._id + '.jpeg';
-    } else if (model instanceof Category) {
-
+    } else if (model instanceof Product) {
+        _path = './uploads/products/product_' + model._id + '.jpeg';
     }
-
-
-
 
     let fileExtsValid = ['png', 'jpg', 'gif', 'jpeg'];
     let nameSplit = file.name.split('.');
@@ -87,8 +68,8 @@ fnUpdateFile = (files, model, res) => {
 
         }
 
-        return res.status(400).json({
-            successful: false,
+        return res.json({
+            successful: true,
             file,
             message: "File update"
         });
