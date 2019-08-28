@@ -23,7 +23,7 @@ process.env.MONGO_DB = urlDB;
 //           VENCIMIENTO DE TOKEN
 // =========================================
 
-process.env.EXPIRATION_TOKEN = 60 * 60 * 24 * 35;
+process.env.EXPIRATION_TOKEN = '48h';
 
 // =========================================
 //           SEED TOKEN AUTH

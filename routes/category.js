@@ -9,27 +9,30 @@ let Category = require('../models/category');
 
 app.get('/category', verifyToken, (req, res) => {
 
-    Category.find().exec((err, categorys) => {
+    Category.find({})
+        .sort('description')
+        .populate('user', 'name email')
+        .exec((err, categorys) => {
 
-        if (err) {
-            return res.status(400).json({
-                err,
-                successful: false,
-            })
-        }
+            if (err) {
+                return res.status(400).json({
+                    err,
+                    successful: false,
+                })
+            }
 
-        Category.countDocuments({}, (err, count) => {
-            res.json({
-                successful: true,
-                'total_categorys': count,
-                categorys
+            Category.countDocuments({}, (err, count) => {
+                res.json({
+                    successful: true,
+                    'total_categorys': count,
+                    categorys
+                });
             });
         });
-    });
 
 });
 
-app.delete('/category/:id', verifyToken, (req, res) => {
+app.get('/category/:id', verifyToken, (req, res) => {
 
     let id = req.params.id;
 
@@ -58,15 +61,15 @@ app.post('/category', verifyToken, (req, res) => {
     let body = req.body;
 
     categorySchema = new Category({
-        name: body.name,
-        userAt: user._id,
+        description: body.description,
+        user: user._id,
     });
 
     categorySchema.save((err, categoryDB) => {
 
         if (err) {
             return res.status(400).json({
-                errors: err.errors,
+                errors: (err && err.errors) ? err.errors : err,
                 successful: false,
             })
         }
@@ -80,11 +83,16 @@ app.post('/category', verifyToken, (req, res) => {
 
 });
 
+/* 
 app.put('/category/:id', verifyToken, (req, res) => {
-    let id = req.params.id;
-    let body = _.pick(req.body, ['name']);
 
-    Category.findByIdAndRemove(id, (err, categoryDB) => {
+    let id = req.params.id;
+    let body = _.pick(req.body, ['description']);
+
+    Category.findOneAndUpdate(id, body, {
+        new: true,
+        runValidators: true
+    }, (err, categoryDB) => {
 
         if (err) {
             return res.status(400).json({
@@ -101,12 +109,12 @@ app.put('/category/:id', verifyToken, (req, res) => {
     });
 
 });
+*/
 
-
-app.delete('/users/:id', verifyToken, async function(req, res) {
+app.delete('/category/:id', verifyToken, async function(req, res) {
 
     let id = req.params.id;
-    CategorySchema.findByIdAndRemove(id, (err, categoryDelete) => {
+    Category.findByIdAndRemove(id, (err, categoryDelete) => {
 
         if (err) {
             return res.status(400).json({
@@ -123,6 +131,5 @@ app.delete('/users/:id', verifyToken, async function(req, res) {
 
 
 });
-
 
 module.exports = app;
