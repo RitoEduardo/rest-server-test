@@ -40,6 +40,7 @@ app.get('/users', function(req, res) {
                     successful: true,
                     'total_users': count,
                     'view_for_page': viewForPage,
+                    page,
                     users
                 });
             });

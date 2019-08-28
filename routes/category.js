@@ -7,7 +7,7 @@ const { verifyToken } = require('../middlewares/auth');
 
 let Category = require('../models/category');
 
-app.get('/category', verifyToken, (req, res) => {
+app.get('/categories', verifyToken, (req, res) => {
 
     Category.find({})
         .sort('description')
@@ -24,7 +24,7 @@ app.get('/category', verifyToken, (req, res) => {
             Category.countDocuments({}, (err, count) => {
                 res.json({
                     successful: true,
-                    'total_categorys': count,
+                    'total_categories': count,
                     categorys
                 });
             });
@@ -32,7 +32,7 @@ app.get('/category', verifyToken, (req, res) => {
 
 });
 
-app.get('/category/:id', verifyToken, (req, res) => {
+app.get('/categories/:id', verifyToken, (req, res) => {
 
     let id = req.params.id;
 
@@ -55,7 +55,7 @@ app.get('/category/:id', verifyToken, (req, res) => {
 
 });
 
-app.post('/category', verifyToken, (req, res) => {
+app.post('/categories', verifyToken, (req, res) => {
 
     let user = req.user;
     let body = req.body;
@@ -84,7 +84,7 @@ app.post('/category', verifyToken, (req, res) => {
 });
 
 /* 
-app.put('/category/:id', verifyToken, (req, res) => {
+app.put('/categories/:id', verifyToken, (req, res) => {
 
     let id = req.params.id;
     let body = _.pick(req.body, ['description']);
@@ -111,7 +111,7 @@ app.put('/category/:id', verifyToken, (req, res) => {
 });
 */
 
-app.delete('/category/:id', verifyToken, async function(req, res) {
+app.delete('/categories/:id', verifyToken, async function(req, res) {
 
     let id = req.params.id;
     Category.findByIdAndRemove(id, (err, categoryDelete) => {

@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+
 var uniqueValidator = require('mongoose-unique-validator');
 
-var categorySchema = new mongoose.Schema({
+var categorySchema = new Schema({
     description: {
         type: String,
         unique: true,
