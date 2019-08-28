@@ -115,7 +115,7 @@ app.put('/users/:id', function(req, res) {
 
 });
 
-app.delete('/users/:id', function(req, res) {
+app.delete('/users/:id', async function(req, res) {
     //res.send('Delete Users');
     let id = req.params.id;
     //res.send({ 'id': id })
@@ -138,7 +138,7 @@ app.delete('/users/:id', function(req, res) {
     */
     //update state 
 
-    var model = User.where({ _id: id }).update({ state: false }).exec();
+    var model = await User.where({ _id: id }).update({ state: false }).exec();
 
     res.json({
         successful: true,
