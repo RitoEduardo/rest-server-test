@@ -4,6 +4,9 @@ const fileUpload = require('express-fileupload');
 const User = require('../models/user');
 const Product = require('../models/product');
 
+const fs = require('fs');
+const path = require('path');
+
 const app = express();
 app.use(fileUpload({ useTempFiles: true }));
 
@@ -17,14 +20,9 @@ app.put('/upload/user-profile', verifyToken, async(req, res) => {
 });
 
 app.put('/upload/product-img/:id', [verifyToken, verifyAdmin], async(req, res) => {
-
     let id = req.params.id;
-
     let product = await Product.findById(id).exec();
     return fnUpdateFile(req.files, product, res);
-
-
-
 });
 
 fnUpdateFile = (files, model, res) => {
@@ -38,14 +36,6 @@ fnUpdateFile = (files, model, res) => {
 
     let file = files.file;
 
-    let _path = './uploads/filename.jpg'
-
-    if (model instanceof User) {
-        _path = './uploads/users/profile_' + model._id + '.jpeg';
-    } else if (model instanceof Product) {
-        _path = './uploads/products/product_' + model._id + '.jpeg';
-    }
-
     let fileExtsValid = ['png', 'jpg', 'gif', 'jpeg'];
     let nameSplit = file.name.split('.');
     let fileExt = nameSplit[nameSplit.length - 1];
@@ -55,6 +45,22 @@ fnUpdateFile = (files, model, res) => {
             successful: false,
             message: "File extension is not valid"
         });
+    }
+
+    let _path = './uploads/filename.jpeg'
+
+    if (model instanceof User) {
+
+        let newNameImg = 'profile_' + model._id + '-' + new Date().getMilliseconds() + '.jpeg';
+        _path = './uploads/users/' + newNameImg;
+        fnUpdateAndRemoveImg(newNameImg, model);
+
+    } else if (model instanceof Product) {
+
+        let newNameImg = 'product_' + model._id + '-' + new Date().getMilliseconds() + '.jpeg';
+        _path = './uploads/products/' + newNameImg;
+        fnUpdateAndRemoveImg(newNameImg, model);
+
     }
 
     file.mv(_path, (err) => {
@@ -79,6 +85,25 @@ fnUpdateFile = (files, model, res) => {
 
 
 };
+
+fnUpdateAndRemoveImg = (newNameImg, model) => {
+
+    let pathImg = "undefined.jpeg";
+    let lastNameImg = "" + model.img;
+    model.img = newNameImg;
+    model.save();
+
+    if ((model instanceof User) && lastNameImg) {
+        pathImg = path.resolve(__dirname, '../uploads/users/' + lastNameImg);
+    } else if ((model instanceof Product) && lastNameImg) {
+        pathImg = path.resolve(__dirname, '../uploads/products/' + lastNameImg);
+    }
+
+    if (fs.existsSync(pathImg)) {
+        fs.unlinkSync(pathImg);
+    }
+
+}
 
 app.put('/upload', function(req, res) {
 

@@ -27,8 +27,11 @@ var productSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
         ref: 'user'
-    }
-
+    },
+    img: {
+        type: String,
+        required: false
+    },
 });
 
 module.exports = mongoose.model('product', productSchema);

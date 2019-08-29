@@ -15,7 +15,7 @@ app.get('/', function(req, res) {
 
 app.get('/users', function(req, res) {
 
-    const viewForPage = Number(req.query.limit) || 3;
+    const viewForPage = Number(req.query.limit) || 5;
     const page = Number(req.query.page) || 1;
     const asFrom = viewForPage * (page - 1);
 
@@ -23,7 +23,7 @@ app.get('/users', function(req, res) {
         state: true
     };
 
-    User.find(filters, 'name email')
+    User.find(filters, 'name email img')
         .skip(asFrom)
         .limit(viewForPage)
         .exec((err, users) => {
